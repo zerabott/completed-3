@@ -106,8 +106,32 @@ def run_bot():
         # First, setup database
         setup_database()
 
-        # Start bot.py without blocking the main thread
-        subprocess.Popen([sys.executable, "bot.py"])
+        # Start bot.py with output redirected to stdout so we can see errors
+        import subprocess
+        bot_process = subprocess.Popen(
+            [sys.executable, "bot.py"],
+            stdout=sys.stdout,
+            stderr=sys.stderr,
+            universal_newlines=True,
+            bufsize=1
+        )
+        
+        logger.info(f"✅ Bot subprocess started with PID: {bot_process.pid}")
+        
+        # Monitor the bot process
+        def monitor_bot():
+            while True:
+                poll_result = bot_process.poll()
+                if poll_result is not None:
+                    logger.error(f"❌ Bot subprocess exited with code: {poll_result}")
+                    bot_status["running"] = False
+                    break
+                bot_status["last_activity"] = datetime.now(timezone.utc)
+                import time
+                time.sleep(5)
+        
+        monitor_thread = threading.Thread(target=monitor_bot, daemon=True)
+        monitor_thread.start()
 
     except Exception as e:
         logger.error(f"❌ Bot subprocess error: {e}")
@@ -116,13 +140,23 @@ def run_bot():
 
 # ------------------- Main -------------------
 if __name__ == "__main__":
-    # Start bot in a background daemon thread
-    bot_thread = threading.Thread(target=run_bot, daemon=True)
+    # Start bot in a background thread (NOT daemon - keep it alive)
+    bot_thread = threading.Thread(target=run_bot, daemon=False)
     bot_thread.start()
-
+    
+    # Give bot time to start
+    import time
+    time.sleep(3)
+    
     # Start Flask server immediately so Render detects the open port
     port = int(os.environ.get("PORT", 5000))
     logger.info(f"🌐 Starting web server on 0.0.0.0:{port}")
-    app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
+    
+    # Keep the main thread alive forever
+    try:
+        app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
+    except KeyboardInterrupt:
+        logger.info("👋 Shutting down...")
+        sys.exit(0)
 
 
