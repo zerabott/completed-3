@@ -103,9 +103,6 @@ def run_bot():
         bot_status["start_time"] = datetime.now(timezone.utc)
         bot_status["running"] = True
 
-        # First, setup database
-        setup_database()
-
         # Start bot.py with output redirected to stdout so we can see errors
         import subprocess
         bot_process = subprocess.Popen(
@@ -113,7 +110,8 @@ def run_bot():
             stdout=sys.stdout,
             stderr=sys.stderr,
             universal_newlines=True,
-            bufsize=1
+            bufsize=1,
+            env={**os.environ, "PYTHONUNBUFFERED": "1"}  # Ensure immediate output
         )
         
         logger.info(f"✅ Bot subprocess started with PID: {bot_process.pid}")
@@ -125,7 +123,7 @@ def run_bot():
                 if poll_result is not None:
                     logger.error(f"❌ Bot subprocess exited with code: {poll_result}")
                     bot_status["running"] = False
-                    break
+                    sys.exit(1)  # Exit the whole process if bot dies
                 bot_status["last_activity"] = datetime.now(timezone.utc)
                 import time
                 time.sleep(5)
@@ -135,18 +133,19 @@ def run_bot():
 
     except Exception as e:
         logger.error(f"❌ Bot subprocess error: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
         bot_status["running"] = False
         raise
 
 # ------------------- Main -------------------
 if __name__ == "__main__":
-    # Start bot in a background thread (NOT daemon - keep it alive)
-    bot_thread = threading.Thread(target=run_bot, daemon=False)
-    bot_thread.start()
+    # First setup database
+    setup_database()
     
-    # Give bot time to start
-    import time
-    time.sleep(3)
+    # Start bot in a background thread
+    bot_thread = threading.Thread(target=run_bot, daemon=True)
+    bot_thread.start()
     
     # Start Flask server immediately so Render detects the open port
     port = int(os.environ.get("PORT", 5000))
