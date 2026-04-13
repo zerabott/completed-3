@@ -10694,14 +10694,16 @@ def main():
     AsyncDBWrapper.initialize()
     logger.info("✅ Async database wrapper initialized")
     
-    # Initialize database
-    init_db()
-    
-    # Run database migrations
-    logger.info("Running database migrations...")
-    if not run_migrations():
-        logger.error("Failed to run migrations, exiting")
-        return
+    # Initialize database and run migrations (with error handling)
+    try:
+        logger.info("Initializing database...")
+        init_db()
+        logger.info("✅ Database initialized successfully")
+    except Exception as e:
+        logger.error(f"❌ Database initialization failed: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        raise
     
     # Run automatic notification table schema fixes
     logger.info("Running notification table schema migrations...")
