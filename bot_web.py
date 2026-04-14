@@ -58,6 +58,16 @@ def ping():
     """Simple ping endpoint"""
     return "pong"
 
+@app.route("/bot-logs", methods=["GET"])
+def bot_logs():
+    """View recent bot logs for debugging"""
+    try:
+        with open('bot_output.log', 'r') as f:
+            logs = f.read()
+        return f"<pre>{logs[-5000:]}</pre>"  # Last 5000 chars
+    except Exception as e:
+        return f"No logs available: {e}"
+
 # ------------------- Database Setup -------------------
 def setup_database():
     """Run database migrations and setup"""
@@ -105,16 +115,21 @@ def run_bot():
 
         # Start bot.py with output redirected to stdout so we can see errors
         import subprocess
+        
+        # Create a log file to capture bot output
+        log_file = open('bot_output.log', 'w')
+        
         bot_process = subprocess.Popen(
             [sys.executable, "bot.py"],
-            stdout=sys.stdout,
-            stderr=sys.stderr,
+            stdout=log_file,
+            stderr=log_file,
             universal_newlines=True,
             bufsize=1,
             env={**os.environ, "PYTHONUNBUFFERED": "1"}  # Ensure immediate output
         )
         
         logger.info(f"✅ Bot subprocess started with PID: {bot_process.pid}")
+        logger.info("📝 Bot logs are being written to bot_output.log")
         
         # Monitor the bot process
         def monitor_bot():
@@ -122,6 +137,15 @@ def run_bot():
                 poll_result = bot_process.poll()
                 if poll_result is not None:
                     logger.error(f"❌ Bot subprocess exited with code: {poll_result}")
+                    # Read the log file to show what happened
+                    log_file.close()
+                    try:
+                        with open('bot_output.log', 'r') as f:
+                            logs = f.read()
+                            if logs:
+                                logger.error(f"📄 Bot output log:\n{logs[-2000:]}")  # Last 2000 chars
+                    except:
+                        pass
                     bot_status["running"] = False
                     sys.exit(1)  # Exit the whole process if bot dies
                 bot_status["last_activity"] = datetime.now(timezone.utc)
