@@ -10748,6 +10748,27 @@ def main():
     
     application = Application.builder().token(BOT_TOKEN).request(request).build()
     
+    logger.info("✅ Application builder created")
+    
+    # Test Telegram connectivity before starting polling
+    logger.info("🌐 Testing Telegram API connectivity...")
+    try:
+        import asyncio
+        async def test_connection():
+            async with application:
+                me = await application.bot.get_me()
+                logger.info(f"✅ Connected to Telegram as @{me.username}")
+                return True
+        
+        asyncio.run(test_connection())
+    except Exception as e:
+        logger.error(f"❌ Failed to connect to Telegram: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
+        raise
+    
+    logger.info("🔧 Setting up error handlers and command handlers...")
+    
     # Add error handler
     application.add_error_handler(global_error_handler)
     
@@ -10786,7 +10807,11 @@ def main():
     bot_logger.log_user_action(0, "bot_started", "University Confession Bot initialized")
     
     # Run the bot
-    logger.info("Starting University Confession Bot...")
+    logger.info("="*60)
+    logger.info("🚀 STARTING TELEGRAM BOT POLLING...")
+    logger.info("="*60)
+    logger.info("Bot should now be connecting to Telegram servers...")
+    logger.info("If you don't see activity within 10s, there may be a network issue.")
     
     try:
         # Use the standard run_polling method with proper initialization for v20+
