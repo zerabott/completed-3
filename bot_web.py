@@ -121,35 +121,69 @@ def run_bot():
         
         bot_process = subprocess.Popen(
             [sys.executable, "bot.py"],
-            stdout=log_file,
-            stderr=log_file,
+            stdout=subprocess.PIPE,  # Capture output
+            stderr=subprocess.STDOUT,  # Merge stderr with stdout
             universal_newlines=True,
             bufsize=1,
             env={**os.environ, "PYTHONUNBUFFERED": "1"}  # Ensure immediate output
         )
         
         logger.info(f"✅ Bot subprocess started with PID: {bot_process.pid}")
-        logger.info("📝 Bot logs are being written to bot_output.log")
+        logger.info("📝 Bot logs are being captured")
+        
+        # Read bot output in real-time and log it
+        def read_bot_output():
+            import time
+            with open('bot_output.log', 'w') as log:
+                for line in bot_process.stdout:
+                    line = line.strip()
+                    if line:
+                        # Write to log file
+                        log.write(line + '\n')
+                        log.flush()  # Ensure immediate write
+                        
+                        # Log every line from bot immediately
+                        if "ERROR" in line or "error" in line.lower():
+                            logger.error(f"🤖 {line}")
+                        elif "WARNING" in line or "warning" in line.lower():
+                            logger.warning(f"🤖 {line}")
+                        else:
+                            logger.info(f"🤖 {line}")
+        
+        # Start thread to read output
+        import threading
+        output_thread = threading.Thread(target=read_bot_output, daemon=True)
+        output_thread.start()
         
         # Monitor the bot process
         def monitor_bot():
+            import time
+            startup_time = time.time()
+            
             while True:
                 poll_result = bot_process.poll()
                 if poll_result is not None:
-                    logger.error(f"❌ Bot subprocess exited with code: {poll_result}")
-                    # Read the log file to show what happened
-                    log_file.close()
+                    elapsed = time.time() - startup_time
+                    logger.error(f"❌ Bot subprocess exited after {elapsed:.1f}s with code: {poll_result}")
+                    bot_status["running"] = False
+                    sys.exit(1)  # Exit the whole process if bot dies
+                
+                # Check if bot has been running for too long without activity
+                elapsed = time.time() - startup_time
+                if elapsed > 120 and not bot_status.get("last_activity"):
+                    logger.error(f"⏱️ Bot subprocess appears hung - no activity for {elapsed:.0f}s")
+                    logger.error("📋 Checking bot_output.log for last output...")
                     try:
                         with open('bot_output.log', 'r') as f:
                             logs = f.read()
                             if logs:
-                                logger.error(f"📄 Bot output log:\n{logs[-2000:]}")  # Last 2000 chars
+                                logger.error(f"📄 Last bot output:\n{logs[-2000:]}")
                     except:
                         pass
                     bot_status["running"] = False
-                    sys.exit(1)  # Exit the whole process if bot dies
+                    sys.exit(1)
+                
                 bot_status["last_activity"] = datetime.now(timezone.utc)
-                import time
                 time.sleep(5)
         
         monitor_thread = threading.Thread(target=monitor_bot, daemon=True)
