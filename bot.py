@@ -10678,14 +10678,27 @@ async def warmup_cache():
 def main():
     """Main function to run the bot - optimized with async startup"""
     import asyncio
+    import sys
+    
+    # Immediate logging to confirm bot started
+    logger.info("="*60)
+    logger.info("🤖 BOT.PY MAIN() FUNCTION STARTED")
+    logger.info(f"Python version: {sys.version}")
+    logger.info(f"Working directory: {os.getcwd()}")
+    logger.info("="*60)
     
     # Import instance manager
     from instance_manager import ensure_single_instance
     
-    # Ensure only one instance is running
-    if not ensure_single_instance():
-        logger.error("Another bot instance is already running. Exiting.")
-        return
+    logger.info("🔒 Checking for existing bot instance...")
+    # Ensure only one instance is running (skip on Render/cloud deployments)
+    is_render = os.environ.get('RENDER') == 'true'
+    if is_render:
+        logger.info("☁️ Running on Render - skipping instance lock (single-instance deployment)")
+    else:
+        if not ensure_single_instance():
+            logger.error("❌ Another bot instance is already running. Exiting.")
+            return
     
     logger.info("✅ Bot instance lock acquired successfully")
     
