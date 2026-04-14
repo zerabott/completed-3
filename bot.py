@@ -3,6 +3,15 @@ Enhanced Telegram Confession Bot with Sophisticated Comment System
 Features: Pagination, Like/Dislike, Replies, Reporting, and Admin Moderation
 """
 
+# Immediate startup message to confirm script is running
+import sys
+import os
+print("=" * 60, flush=True)
+print("🤖 BOT.PY SCRIPT STARTED - PYTHON VERSION: " + sys.version, flush=True)
+print("🤖 WORKING DIRECTORY: " + os.getcwd(), flush=True)
+print("🤖 FILE: " + __file__, flush=True)
+print("=" * 60, flush=True)
+
 import logging
 import re
 import os
@@ -10838,7 +10847,17 @@ def main():
             raise
 
 if __name__ == '__main__':
-    main()
+    try:
+        print("🤖 Calling main() function now...", flush=True)
+        logger.info("🤖 About to call main() function...")
+        main()
+    except Exception as e:
+        print(f"❌ FATAL ERROR IN main(): {e}", flush=True)
+        import traceback
+        print(traceback.format_exc(), flush=True)
+        logger.error(f"Fatal error in main(): {e}")
+        logger.error(traceback.format_exc())
+        sys.exit(1)
 
 
 
