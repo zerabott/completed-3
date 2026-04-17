@@ -1604,7 +1604,7 @@ async def category_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await query.edit_message_text(
                 f"📝 *Categories selected: {escape_markdown_text(categories_text)}*\n\n"
                 f"Now send your confession or question\. You can:\n"
-                f"• Type text \(up to {MAX_CONFESSION_LENGTH} characters\)\n"
+                rf"• Type text \(up to {MAX_CONFESSION_LENGTH} characters\)\n"
                 f"• Send a photo/video/GIF with optional caption\n\n"
                 f"Send your content below or use the Cancel button to return to menu\:",
                 reply_markup=cancel_reply_markup,
@@ -1616,14 +1616,14 @@ async def category_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             
             # Create instructions based on content type
             media_instructions = {
-                'photo': '📷 Please send a photo for your confession\.',
-                'video': '🎥 Please send a video for your confession\.',
-                'animation': '🎭 Please send a GIF or animation for your confession\.',
-                'photo_text': '📷 Please send a photo for your confession\. You can add text description after sending the photo\.',
-                'video_text': '🎥 Please send a video for your confession\. You can add text description after sending the video\.'
+                'photo': r'📷 Please send a photo for your confession\.',
+                'video': r'🎥 Please send a video for your confession\.',
+                'animation': r'🎭 Please send a GIF or animation for your confession\.',
+                'photo_text': r'📷 Please send a photo for your confession\. You can add text description after sending the photo\.',
+                'video_text': r'🎥 Please send a video for your confession\. You can add text description after sending the video\.'
             }
             
-            instruction = media_instructions.get(content_type, 'Please send your media\.')
+            instruction = media_instructions.get(content_type, r'Please send your media\.')
             
             # Create cancel button for the media waiting interface
             cancel_keyboard = [[InlineKeyboardButton("🚫 Cancel", callback_data="cancel_to_menu")]]
@@ -1632,7 +1632,7 @@ async def category_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await query.edit_message_text(
                 f"📝 *Categories selected: {escape_markdown_text(categories_text)}*\n\n"
                 f"{instruction}\n\n"
-                f"Use the Cancel button below to return to the main menu\.",
+                rf"Use the Cancel button below to return to the main menu\.",
                 reply_markup=cancel_reply_markup,
                 parse_mode="MarkdownV2"
             )
@@ -1683,7 +1683,7 @@ async def category_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     await query.edit_message_text(
         f"📝 *Choose categories for your confession/question:*\n\n"
-        f"You can select up to {MAX_CATEGORIES} categories\. Click on each category you want, then click '✅ Done Selecting' when finished\.\n"
+        rf"You can select up to {MAX_CATEGORIES} categories\. Click on each category you want, then click '✅ Done Selecting' when finished\.\n"
         f"{escape_markdown_text(selected_text)}{escape_markdown_text(remaining_text)}",
         reply_markup=reply_markup,
         parse_mode="MarkdownV2"
@@ -3903,8 +3903,8 @@ async def handle_post_edit_content(update: Update, context: ContextTypes.DEFAULT
         
         await update.message.reply_text(
             "✅ *Post Updated Successfully*\n\n"
-            "Your confession has been updated and sent for review\.\n"
-            "Admins will be notified of your changes\.",
+            r"Your confession has been updated and sent for review\.\n"
+            r"Admins will be notified of your changes\.",
             parse_mode="MarkdownV2"
         )
     else:
@@ -4313,8 +4313,8 @@ async def handle_profile_contact_request(update: Update, context: ContextTypes.D
 
     await query.edit_message_text(
         "📩 *Chat request sent*\n\n"
-        "I'll notify you when they reply\.\n\n"
-        "🔄 *Next*\:\n"
+        r"I'll notify you when they reply\.\n\n"
+        r"🔄 *Next*:\n"
         "• Wait for a reply\n"
         "• Check your inbox\n"
         "• Use the menu below",
@@ -4408,7 +4408,7 @@ async def handle_profile_contact_decision(update: Update, context: ContextTypes.
 
             await query.edit_message_text(
                 f"✅ *Chat started*\n\n"
-                f"You're now chatting with {other_name_for_current}\.",
+                rf"You're now chatting with {other_name_for_current}\.",
                 parse_mode="MarkdownV2",
             )
             # Simple instructions for the user
@@ -4426,7 +4426,7 @@ async def handle_profile_contact_decision(update: Update, context: ContextTypes.
                 chat_id=partner_id,
                 text=(
                     f"✅ *Chat started*\n\n"
-                    f"You're now chatting with {other_name_for_partner}\."
+                    rf"You're now chatting with {other_name_for_partner}\."
                 ),
                 parse_mode="MarkdownV2",
             )
