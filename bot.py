@@ -255,8 +255,7 @@ async def send_trending_media_post(context, chat_id, post, reply_markup=None, st
 MAIN_MENU = [
     ["🙊 Confess/Ask Question", "👤 My Profile"],
     ["🏆 My Rank", "📊 My Stats"],
-    ["📞 Contact Admin"],
-    ["❓ Help/About"]
+    ["📞 Contact Admin","❓ Help/About"]
 ]
 
 CANCEL_BUTTON = "🚫 Cancel"
@@ -1500,7 +1499,7 @@ async def choose_categories_flow(update: Update, context: ContextTypes.DEFAULT_T
     MAX_CATEGORIES = 3
     message_text = (
         f"📝 *Choose categories for your confession/question:*\n\n"
-        f"You can select up to {MAX_CATEGORIES} categories\. Click on each category you want, then click '✅ Done Selecting' when finished\."
+        rf"You can select up to {MAX_CATEGORIES} categories\. Click on each category you want, then click '✅ Done Selecting' when finished\."
     )
     
     if direct_call:
@@ -1524,7 +1523,7 @@ async def choose_categories_flow(update: Update, context: ContextTypes.DEFAULT_T
         
         await update.callback_query.edit_message_text(
             f"📝 *Choose categories for your {content_type_display} confession/question:*\n\n"
-            f"You can select up to {MAX_CATEGORIES} categories\. Click on each category you want, then click '✅ Done Selecting' when finished\.",
+            rf"You can select up to {MAX_CATEGORIES} categories\. Click on each category you want, then click '✅ Done Selecting' when finished\.",
             reply_markup=reply_markup,
             parse_mode="MarkdownV2"
         )
@@ -1588,8 +1587,8 @@ async def category_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             
             await query.edit_message_text(
                 f"📝 *Categories selected: {escape_markdown_text(categories_text)}*\n\n"
-                f"Now write your confession or question\. You have up to {MAX_CONFESSION_LENGTH} characters\.\n\n"
-                f"Type your message below or use the Cancel button to return to menu\:",
+                rf"Now write your confession or question\. You have up to {MAX_CONFESSION_LENGTH} characters\.\n\n"
+                rf"Type your message below or use the Cancel button to return to menu\:",
                 reply_markup=cancel_reply_markup,
                 parse_mode="MarkdownV2"
             )
@@ -1603,10 +1602,10 @@ async def category_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             
             await query.edit_message_text(
                 f"📝 *Categories selected: {escape_markdown_text(categories_text)}*\n\n"
-                f"Now send your confession or question\. You can:\n"
+                rf"Now send your confession or question\. You can:\n"
                 rf"• Type text \(up to {MAX_CONFESSION_LENGTH} characters\)\n"
                 f"• Send a photo/video/GIF with optional caption\n\n"
-                f"Send your content below or use the Cancel button to return to menu\:",
+                rf"Send your content below or use the Cancel button to return to menu\:",
                 reply_markup=cancel_reply_markup,
                 parse_mode="MarkdownV2"
             )
@@ -2083,8 +2082,8 @@ async def handle_media_submission(update: Update, context: ContextTypes.DEFAULT_
         
         await update.message.reply_text(
             f"✅ *{media_type_display.title()} received\\!*\n\n"
-            f"Now please send the text description for your confession\\. "
-            f"You have up to {MAX_CONFESSION_LENGTH} characters\\.",
+            rf"Now please send the text description for your confession\\. "
+            rf"You have up to {MAX_CONFESSION_LENGTH} characters\\.",
             reply_markup=cancel_reply_markup,
             parse_mode="MarkdownV2"
         )
@@ -2298,7 +2297,7 @@ async def show_most_commented_posts(update: Update, context: ContextTypes.DEFAUL
     # Delete the menu and send header
     await update.callback_query.delete_message()
     
-    header_text = f"💬 *Most Commented Posts \\(Last 24h\\)*\n\n📈 {len(most_commented)} most discussed posts"
+    header_text = rf"💬 *Most Commented Posts \\(Last 24h\\)*\n\n📈 {len(most_commented)} most discussed posts"
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=header_text,
@@ -2330,7 +2329,7 @@ async def show_most_commented_posts(update: Update, context: ContextTypes.DEFAUL
         # Create buttons
         keyboard = [
             [
-                InlineKeyboardButton(f"💬 Join Discussion \\({comment_count}\\)", callback_data=f"see_comments_{post_id}_1"),
+                InlineKeyboardButton(rf"💬 Join Discussion \\({comment_count}\\)", callback_data=f"see_comments_{post_id}_1"),
                 InlineKeyboardButton("📖 View Full Post", callback_data=f"view_post_{post_id}")
             ]
         ]
@@ -2410,7 +2409,7 @@ async def show_rising_posts(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Create buttons
         keyboard = [
             [
-                InlineKeyboardButton(f"💬 View Comments \\({comment_count}\\)", callback_data=f"see_comments_{post_id}_1"),
+                InlineKeyboardButton(rf"💬 View Comments \\({comment_count}\\)", callback_data=f"see_comments_{post_id}_1"),
                 InlineKeyboardButton("📖 View Full Post", callback_data=f"view_post_{post_id}")
             ]
         ]
@@ -2492,7 +2491,7 @@ async def show_most_liked_posts(update: Update, context: ContextTypes.DEFAULT_TY
         # Create buttons
         keyboard = [
             [
-                InlineKeyboardButton(f"💬 See Liked Comments \\({comment_count}\\)", callback_data=f"see_comments_{post_id}_1"),
+                InlineKeyboardButton(rf"💬 See Liked Comments \\({comment_count}\\)", callback_data=f"see_comments_{post_id}_1"),
                 InlineKeyboardButton("📖 View Full Post", callback_data=f"view_post_{post_id}")
             ]
         ]
@@ -2571,7 +2570,7 @@ async def show_all_trending_posts(update: Update, context: ContextTypes.DEFAULT_
         
         keyboard = [
             [
-                InlineKeyboardButton(f"💬 See Comments \\({comment_count}\\)", callback_data=f"see_comments_{post_id}_1"),
+                InlineKeyboardButton(rf"💬 See Comments \\({comment_count}\\)", callback_data=f"see_comments_{post_id}_1"),
                 InlineKeyboardButton("📖 View Full Post", callback_data=f"view_post_{post_id}")
             ]
         ]
@@ -2685,7 +2684,7 @@ async def popular_today(update: Update, context: ContextTypes.DEFAULT_TYPE):
             # Create buttons
             keyboard = [
                 [
-                    InlineKeyboardButton(f"💬 See Comments \\({comment_count}\\)", callback_data=f"see_comments_{post_id}_1"),
+                    InlineKeyboardButton(rf"💬 See Comments \\({comment_count}\\)", callback_data=f"see_comments_{post_id}_1"),
                     InlineKeyboardButton("📖 View Full Post", callback_data=f"view_post_{post_id}")
                 ]
             ]
@@ -2783,7 +2782,7 @@ async def recent_posts(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return
 
         # Send header message
-        header_text = f"📰 *Recent Confessions \\({len(posts)}\\)*\n\n📋 Latest approved posts"
+        header_text = rf"📰 *Recent Confessions \\({len(posts)}\\)*\n\n📋 Latest approved posts"
         await update.message.reply_text(
             header_text,
             parse_mode="MarkdownV2"
@@ -2802,7 +2801,7 @@ async def recent_posts(update: Update, context: ContextTypes.DEFAULT_TYPE):
             # Create buttons for each post
             keyboard = [[
                 InlineKeyboardButton(
-                    f"💬 #{post_id} \\({comment_count} comments\\)", 
+                    rf"💬 #{post_id} \\({comment_count} comments\\)", 
                     callback_data=f"view_post_{post_id}"
                 )
             ]]
@@ -3349,7 +3348,7 @@ async def add_comment_callback(update: Update, context: ContextTypes.DEFAULT_TYP
     if not post_info:
         await query.edit_message_text(
             f"❗ *Post Not Found*\n\n"
-            f"Post #{post_id} could not be found\\. It may have been deleted\\.",
+            rf"Post #{post_id} could not be found\\. It may have been deleted\\.",
             reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🏠 Main Menu", callback_data="menu")]]),
             parse_mode="MarkdownV2"
         )
@@ -3358,8 +3357,8 @@ async def add_comment_callback(update: Update, context: ContextTypes.DEFAULT_TYP
     if post_info[4] != 1:  # approved column
         await query.edit_message_text(
             f"❗ *Post Not Available*\n\n"
-            f"Post #{post_id} is not approved for comments\\. "
-            f"Only approved posts can receive comments\\.",
+            rf"Post #{post_id} is not approved for comments\\. "
+            rf"Only approved posts can receive comments\\.",
             reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🏠 Main Menu", callback_data="menu")]]),
             parse_mode="MarkdownV2"
         )
@@ -3375,8 +3374,8 @@ async def add_comment_callback(update: Update, context: ContextTypes.DEFAULT_TYP
     
     await query.edit_message_text(
         f"💬 *Writing a comment*\n\n"
-        f"Type your comment below \\(max {MAX_COMMENT_LENGTH} characters\\)\\.\n\n"
-        f"Use the Cancel button below or type {CANCEL_BUTTON} to return to main menu\\.",
+        rf"Type your comment below \\(max {MAX_COMMENT_LENGTH} characters\\)\\.\n\n"
+        rf"Use the Cancel button below or type {CANCEL_BUTTON} to return to main menu\\.",
         reply_markup=cancel_reply_markup,
         parse_mode="MarkdownV2"
     )
@@ -3536,7 +3535,7 @@ async def view_my_confessions_callback(update: Update, context: ContextTypes.DEF
         pass
     
     # Send header message
-    header_text = f"📝 *Your Recent Confessions \\({len(posts)} total\\)*"
+    header_text = rf"📝 *Your Recent Confessions \\({len(posts)} total\\)*"
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=header_text,
@@ -3817,7 +3816,7 @@ async def edit_my_post_callback(update: Update, context: ContextTypes.DEFAULT_TY
     logger.info(f"Escaped category: {escaped_category}")
     logger.info(f"Escaped content first 100 chars: {escaped_content[:100]}")
     logger.info(f"Content has dots before escape: {'.' in str(content)}")
-    logger.info(f"Escaped content has backslash-dot: {'\\.' in escaped_content}")
+    logger.info(rf"Escaped content has backslash-dot: {'\\.' in escaped_content}")
     
     edit_text = (
         f"✏️ *Edit Your Confession*\n\n"
@@ -4014,7 +4013,7 @@ async def handle_admin_reply_message(update: Update, context: ContextTypes.DEFAU
         if success:
             await update.message.reply_text(
                 "✅ *Reply sent successfully\\!*\n\n"
-                f"Your reply has been sent anonymously to the user\\.",
+                rf"Your reply has been sent anonymously to the user\\.",
                 parse_mode="MarkdownV2"
             )
         else:
@@ -4023,7 +4022,7 @@ async def handle_admin_reply_message(update: Update, context: ContextTypes.DEFAU
                 await update.message.reply_text(
                     f"⚠️ *Duplicate Reply Prevented*\n\n"
                     f"{escape_markdown_text(result)}\n\n"
-                    f"Only one admin can reply to each message\\.",
+                    rf"Only one admin can reply to each message\\.",
                     parse_mode="MarkdownV2"
                 )
             else:
@@ -4047,12 +4046,12 @@ async def daily_digest(update: Update, context: ContextTypes.DEFAULT_TYPE):
     posts = get_todays_posts_with_media()
     
     if not posts:
-        await update.message.reply_text("📅 No confessions posted today yet\\. Check back later\\!", parse_mode="MarkdownV2")
+        await update.message.reply_text(r"📅 No confessions posted today yet\\. Check back later\\!", parse_mode="MarkdownV2")
         await show_menu(update, context)
         return
     
     # Send header message
-    header_text = f"📅 *Today's Confessions \\({len(posts)} total\\)*"
+    header_text = rf"📅 *Today's Confessions \\({len(posts)} total\\)*"
     await update.message.reply_text(
         header_text,
         parse_mode="MarkdownV2"
@@ -4280,7 +4279,7 @@ async def handle_profile_contact_request(update: Update, context: ContextTypes.D
         "💬 *New chat request*\n\n"
         f"From: {name_line}\n"
         f"Bio: {bio_display}\n\n"
-        "🤔 *Choose an option below*\."
+        r"🤔 *Choose an option below*\."
     )
     keyboard = [
         [
@@ -4575,7 +4574,7 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Clear all user context including awaiting button selection state
         await clear_user_context(context)
         context.user_data.pop('awaiting_post_id', None)
-        await query.edit_message_text("🏠 Returned to main menu\\. Please use the menu below\\.", parse_mode="MarkdownV2")
+        await query.edit_message_text(r"🏠 Returned to main menu\\. Please use the menu below\\.", parse_mode="MarkdownV2")
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text="What would you like to do next?",
@@ -5037,7 +5036,7 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if data == "cancel_contact_admin":
         # Clear contact admin state
         await clear_user_context(context)
-        await query.edit_message_text("🚫 Contact admin cancelled\\. Returned to main menu\\.", parse_mode="MarkdownV2")
+        await query.edit_message_text(r"🚫 Contact admin cancelled\\. Returned to main menu\\.", parse_mode="MarkdownV2")
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             text="What would you like to do next?",
@@ -5162,7 +5161,7 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 comments_data, current_page, total_pages, total_comments = get_comments_paginated(post_id, page)
                 
                 # Build and update the message with refreshed like/dislike counts
-                text = f"💬 *Comments \\({total_comments} total\\)*\n*Page {current_page} of {total_pages}*\n\n"
+                text = rf"💬 *Comments \\({total_comments} total\\)*\n*Page {current_page} of {total_pages}*\n\n"
                 keyboard = []
                 
                 for comment_data in comments_data:
@@ -5189,7 +5188,7 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                             text += f"↳ {escape_markdown_text(truncate_text(reply_content, 60))}\n"
                     
                     if total_replies > len(replies):
-                        text += f"↳ \\.\\.\\.\\.\\. and {total_replies - len(replies)} more replies\n"
+                        text += rf"↳ \\.\\.\\.\\.\\. and {total_replies - len(replies)} more replies\n"
                     
                     text += "\n"
                     
@@ -5323,8 +5322,8 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await query.edit_message_text(
                 f"💬 *Replying to comment \\#{sequential_number}*\n\n"
                 f"*Original:* {escape_markdown_text(comment_preview)}\n\n"
-                f"Write your reply \\(max {MAX_COMMENT_LENGTH} characters\\)\\:\n\n"
-                f"Type your reply below or use the Cancel button to return to main menu\\.",
+                rf"Write your reply \\(max {MAX_COMMENT_LENGTH} characters\\)\\:\n\n"
+                rf"Type your reply below or use the Cancel button to return to main menu\\.",
                 reply_markup=reply_cancel_markup,
                 parse_mode="MarkdownV2"
             )
@@ -5693,12 +5692,12 @@ Select a category below:
                 await query.answer("✅ Comment replaced with removal notice")
                 await query.edit_message_text(
                     f"✅ **Comment Replaced Successfully**\\n\\n"
-                    f"**Comment \\#{comment_id}** has been replaced with a removal notice\\."
+                    rf"**Comment \\#{comment_id}** has been replaced with a removal notice\\."
                     f"\\n\\n**Statistics:**\\n"
                     f"• Comments replaced: {replacement_stats['comments_replaced']}\\n"
                     f"• Replies replaced: {replacement_stats['replies_replaced']}\\n"
                     f"• Reports cleared: {replacement_stats['reports_cleared']}\\n\\n"
-                    f"The comment structure has been preserved while hiding inappropriate content\\.",
+                    rf"The comment structure has been preserved while hiding inappropriate content\\.",
                     parse_mode="MarkdownV2"
                 )
             else:
@@ -5707,7 +5706,7 @@ Select a category below:
                 await query.edit_message_text(
                     f"❗ **Failed to replace comment \\#{comment_id}**\\n\\n"
                     f"Error: {escape_markdown_text(error_message)}\\n\\n"
-                    f"Please try again or contact system administrator\\.",
+                    rf"Please try again or contact system administrator\\.",
                     parse_mode="MarkdownV2"
                 )
         return
@@ -5735,7 +5734,7 @@ Select a category below:
     if data == "start_confession":
         # Clear any existing context and start confession flow
         await clear_user_context(context)
-        await query.edit_message_text("🙊 *Starting confession submission\\.\\.\\.*", parse_mode="MarkdownV2")
+        await query.edit_message_text(r"🙊 *Starting confession submission\\.\\.\\.*", parse_mode="MarkdownV2")
         # Start confession flow with direct message instead of callback
         from telegram import Update as TgUpdate
         from telegram.ext import ContextTypes
@@ -5749,7 +5748,7 @@ Select a category below:
     if data == "my_stats":
         # Clear any existing context and show user stats
         await clear_user_context(context)
-        await query.edit_message_text("📊 *Loading your statistics\\.\\.\\.*", parse_mode="MarkdownV2")
+        await query.edit_message_text(r"📊 *Loading your statistics\\.\\.\\.*", parse_mode="MarkdownV2")
         # Create a fake update object to call my_stats function  
         from telegram import Update as TgUpdate
         fake_update = TgUpdate(update_id=0, message=update.effective_message)
@@ -5761,7 +5760,7 @@ Select a category below:
     if data == "contact_admin":
         # Clear any existing context and start contact admin flow
         await clear_user_context(context)
-        await query.edit_message_text("📞 *Starting contact admin\\.\\.\\.*", parse_mode="MarkdownV2")
+        await query.edit_message_text(r"📞 *Starting contact admin\\.\\.\\.*", parse_mode="MarkdownV2")
         # Create a fake update object to call start_contact_admin
         from telegram import Update as TgUpdate
         fake_update = TgUpdate(update_id=0, message=update.effective_message)
@@ -5794,14 +5793,14 @@ async def handle_admin_reply_callback(update: Update, context: ContextTypes.DEFA
             await query.answer("⚠️ You have already replied to this message!")
             await query.edit_message_text(
                 f"⚠️ *Already Replied*\n\n"
-                f"You have already replied to message \\#{message_id}\\.",
+                rf"You have already replied to message \\#{message_id}\\.",
                 parse_mode="MarkdownV2"
             )
         else:
             await query.answer("⚠️ This message has already been replied to by another admin!")
             await query.edit_message_text(
                 f"⚠️ *Message Already Handled*\n\n"
-                f"Message \\#{message_id} has already been replied to by Admin {replied_by_admin}\\.",
+                rf"Message \\#{message_id} has already been replied to by Admin {replied_by_admin}\\.",
                 parse_mode="MarkdownV2"
             )
         return
@@ -5812,7 +5811,7 @@ async def handle_admin_reply_callback(update: Update, context: ContextTypes.DEFA
     
     await query.edit_message_text(
         f"💬 *Quick Reply to Message \\#{message_id}*\n\n"
-        f"Please type your reply message\\. It will be sent anonymously to the user\\.",
+        rf"Please type your reply message\\. It will be sent anonymously to the user\\.",
         parse_mode="MarkdownV2"
     )
 
@@ -5883,7 +5882,7 @@ async def handle_admin_read_callback(update: Update, context: ContextTypes.DEFAU
             await query.answer("✅ Message marked as read!")
             await query.edit_message_text(
                 f"✅ *Message \\#{message_id} marked as read*\n\n"
-                f"This message has been marked as handled\\.",
+                rf"This message has been marked as handled\\.",
                 parse_mode="MarkdownV2"
             )
         else:
@@ -5913,7 +5912,7 @@ async def handle_admin_ignore_callback(update: Update, context: ContextTypes.DEF
             await query.answer("🔇 User messages will be ignored!")
             await query.edit_message_text(
                 f"🔇 *User {sender_user_id} ignored*\n\n"
-                f"Future messages from this user will be automatically marked as ignored\\.",
+                rf"Future messages from this user will be automatically marked as ignored\\.",
                 parse_mode="MarkdownV2"
             )
         else:
@@ -6256,7 +6255,7 @@ async def reports_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if target_type == 'comment':
                 comment_id, post_id, content, timestamp = content_details
                 preview = truncate_text(content, 100)
-                reports_text += f"📝 *Comment \\#{comment_id}* \\(Post \\#{post_id}\\)\n"
+                reports_text += rf"📝 *Comment \\#{comment_id}* \\(Post \\#{post_id}\\)\n"
                 reports_text += f"Reports: {report_count}\n"
                 reports_text += f"Content: {escape_markdown_text(preview)}\n\n"
             else:  # post
@@ -6267,7 +6266,7 @@ async def reports_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 reports_text += f"Reports: {report_count}\n"
                 reports_text += f"Content: {escape_markdown_text(preview)}\n\n"
         else:
-            reports_text += f"❓ *{target_type.title()} \\#{target_id}* \\(Content not found\\)\n"
+            reports_text += rf"❓ *{target_type.title()} \\#{target_id}* \\(Content not found\\)\n"
             reports_text += f"Reports: {report_count}\n\n"
     
     # Split long messages
@@ -6442,7 +6441,7 @@ async def blocked_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             blocked_text += escape_markdown_text(name)
         else:
             blocked_text += "No name"
-        blocked_text += f" \\(joined {escape_markdown_text(join_date[:10]) if join_date else 'Unknown'}\\)\n"
+        blocked_text += rf" \\(joined {escape_markdown_text(join_date[:10]) if join_date else 'Unknown'}\\)\n"
     
     blocked_text += f"\n*Total blocked users:* {len(blocked_users)}\n\n"
     blocked_text += "*Use `/unblock <user_id>` to unblock a user\\.*"
@@ -6596,7 +6595,7 @@ async def admin_analytics(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if top_users:
         for i, (name, username, confessions, comments, total) in enumerate(top_users, 1):
             display_name = name or username or "Anonymous"
-            analytics_text += f"{i}\\. {escape_markdown_text(display_name)}: {total} activities\n"
+            analytics_text += rf"{i}\\. {escape_markdown_text(display_name)}: {total} activities\n"
     
     keyboard = [
         [
@@ -6716,7 +6715,7 @@ async def admin_blocked_users(update: Update, context: ContextTypes.DEFAULT_TYPE
         )
         return
     
-    blocked_text = f"⛔ *Blocked Users \\({len(blocked_users)} shown\\)*\n\n"
+    blocked_text = rf"⛔ *Blocked Users \\({len(blocked_users)} shown\\)*\n\n"
     keyboard = []
     
     for user_data in blocked_users:
@@ -6766,7 +6765,7 @@ async def admin_active_users(update: Update, context: ContextTypes.DEFAULT_TYPE)
         """)
         active_users = cursor.fetchall()
     
-    active_text = f"👥 *Most Active Users \\({len(active_users)} shown\\)*\n\n"
+    active_text = rf"👥 *Most Active Users \\({len(active_users)} shown\\)*\n\n"
     keyboard = []
     
     for i, user_data in enumerate(active_users, 1):
@@ -6774,7 +6773,7 @@ async def admin_active_users(update: Update, context: ContextTypes.DEFAULT_TYPE)
         name = f"{first_name or ''} {last_name or ''}".strip() or username or "Anonymous"
         total_activity = questions_asked + comments_posted
         
-        active_text += f"{i}\\. *{escape_markdown_text(name)}*\n"
+        active_text += rf"{i}\\. *{escape_markdown_text(name)}*\n"
         active_text += f"   ID: `{uid}` \\| Activity: {total_activity}\n"
         if join_date:
             formatted_date = join_date.strftime('%Y-%m-%d') if hasattr(join_date, 'strftime') else str(join_date)[:10]
@@ -7002,7 +7001,7 @@ async def admin_pending_posts(update: Update, context: ContextTypes.DEFAULT_TYPE
     # Delete the menu and send header
     await query.delete_message()
     
-    header_text = f"📋 *Pending Posts \\({len(pending_posts)}\\)*\n\n⏳ Posts waiting for review"
+    header_text = rf"📋 *Pending Posts \\({len(pending_posts)}\\)*\n\n⏳ Posts waiting for review"
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=header_text,
@@ -7165,7 +7164,7 @@ async def admin_pending_posts(update: Update, context: ContextTypes.DEFAULT_TYPE
         pass
     
     # Send header
-        header_text = f"📋 *Pending Posts \\({len(pending_posts)} total\\)*\n\nReview each submission below:"
+        header_text = rf"📋 *Pending Posts \\({len(pending_posts)} total\\)*\n\nReview each submission below:"
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=header_text,
@@ -7267,7 +7266,7 @@ Choose an action:
     
     keyboard = [
         [
-            InlineKeyboardButton(f"📋 Pending Posts \\({pending_posts}\\)", callback_data="admin_pending_posts"),
+            InlineKeyboardButton(rf"📋 Pending Posts \\({pending_posts}\\)", callback_data="admin_pending_posts"),
             InlineKeyboardButton("📰 Recent Posts", callback_data="admin_recent_posts")
         ],
         [
@@ -7312,7 +7311,7 @@ Choose an action:
     
     keyboard = [
         [
-            InlineKeyboardButton(f"🚩 View Reports \\({report_count}\\)", callback_data="admin_view_reports"),
+            InlineKeyboardButton(rf"🚩 View Reports \\({report_count}\\)", callback_data="admin_view_reports"),
             InlineKeyboardButton("📊 Moderation Stats", callback_data="admin_mod_stats")
         ],
         [
@@ -7355,7 +7354,7 @@ Choose an action:
     
     keyboard = [
         [
-            InlineKeyboardButton(f"📨 Pending Messages \\({pending_messages}\\)", callback_data="admin_pending_messages"),
+            InlineKeyboardButton(rf"📨 Pending Messages \\({pending_messages}\\)", callback_data="admin_pending_messages"),
             InlineKeyboardButton("📜 Message History", callback_data="admin_message_history")
         ],
         [
@@ -7480,7 +7479,7 @@ async def admin_recent_posts(update: Update, context: ContextTypes.DEFAULT_TYPE)
     # Delete the menu and send header
     await query.delete_message()
     
-    header_text = f"📰 *Recent Approved Posts \\({len(recent_posts)}\\)*\n\n📋 Posts available for admin management"
+    header_text = rf"📰 *Recent Approved Posts \\({len(recent_posts)}\\)*\n\n📋 Posts available for admin management"
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=header_text,
@@ -7515,7 +7514,7 @@ async def admin_recent_posts(update: Update, context: ContextTypes.DEFAULT_TYPE)
         keyboard = [
             [
                 InlineKeyboardButton("👀 View Full Post", callback_data=f"view_post_{post_id}"),
-                InlineKeyboardButton(f"💬 See Comments \\({comment_count}\\)", callback_data=f"see_comments_{post_id}_1")
+                InlineKeyboardButton(rf"💬 See Comments \\({comment_count}\\)", callback_data=f"see_comments_{post_id}_1")
             ],
             [
                 InlineKeyboardButton("🗑️ Delete Post", callback_data=f"admin_delete_post_{post_id}"),
@@ -7683,7 +7682,7 @@ async def admin_content_stats(update: Update, context: ContextTypes.DEFAULT_TYPE
         if top_categories:
             for category, count in top_categories[:5]:
                 percentage = (count / approved_posts * 100) if approved_posts > 0 else 0
-                content_stats_text += f"• {escape_markdown_text(str(category))}: {count} posts \\({percentage:.1f}%\\)\n"
+                content_stats_text += rf"• {escape_markdown_text(str(category))}: {count} posts \\({percentage:.1f}%\\)\n"
         else:
             content_stats_text += "• No approved posts yet\n"
         
@@ -7691,7 +7690,7 @@ async def admin_content_stats(update: Update, context: ContextTypes.DEFAULT_TYPE
         if daily_trends:
             for day, total, approved in daily_trends[:5]:
                 approval_rate_daily = (approved / total * 100) if total > 0 else 0
-                content_stats_text += f"• {escape_markdown_text(str(day))}: {total} submitted, {approved} approved \\({approval_rate_daily:.0f}%\\)\n"
+                content_stats_text += rf"• {escape_markdown_text(str(day))}: {total} submitted, {approved} approved \\({approval_rate_daily:.0f}%\\)\n"
         else:
             content_stats_text += "• No posts in the last 7 days\n"
         
@@ -7699,7 +7698,7 @@ async def admin_content_stats(update: Update, context: ContextTypes.DEFAULT_TYPE
         if most_commented:
             for post_id, content, category, comment_count, display_number in most_commented:
                 preview = truncate_text(content, 40)
-                content_stats_text += f"• \\#{display_number} \\({escape_markdown_text(category)}\\): {comment_count} comments\n"
+                content_stats_text += rf"• \\#{display_number} \\({escape_markdown_text(category)}\\): {comment_count} comments\n"
         else:
             content_stats_text += "• No posts with comments yet\n"
         
@@ -7787,7 +7786,7 @@ async def admin_view_reports(update: Update, context: ContextTypes.DEFAULT_TYPE)
         report_id, user_id, target_type, target_id, reason, timestamp = report
         reports_by_target[(target_type, target_id)].append(report)
     
-    header_text = f"🚩 *Active Reports \\({len(reports)} total\\)*\n\n⚠️ Reported content requiring review"
+    header_text = rf"🚩 *Active Reports \\({len(reports)} total\\)*\n\n⚠️ Reported content requiring review"
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=header_text,
@@ -7810,7 +7809,7 @@ async def admin_view_reports(update: Update, context: ContextTypes.DEFAULT_TYPE)
                 comment_id, post_id, content, timestamp = content_details
                 
                 report_text = f"📝 *Reported Comment*\n\n"
-                report_text += f"*Comment ID:* \\#{comment_id} \\(Post \\#{post_id}\\)\n"
+                report_text += rf"*Comment ID:* \\#{comment_id} \\(Post \\#{post_id}\\)\n"
                 report_text += f"*Reports:* {report_count}\n"
                 report_text += f"*Time:* {escape_markdown_text(timestamp[:16])}\n\n"
                 report_text += f"*Content:*\n{escape_markdown_text(truncate_text(content, 200))}\n"
@@ -7857,7 +7856,7 @@ async def admin_view_reports(update: Update, context: ContextTypes.DEFAULT_TYPE)
             report_text = f"❓ *Missing {target_type.title()}*\n\n"
             report_text += f"*{target_type.title()} ID:* \\#{target_id}\n"
             report_text += f"*Reports:* {report_count}\n\n"
-            report_text += f"Content has been deleted or is no longer available\\."
+            report_text += rf"Content has been deleted or is no longer available\\."
             
             keyboard = [
                 [
@@ -8092,7 +8091,7 @@ async def admin_pending_messages(update: Update, context: ContextTypes.DEFAULT_T
     # Delete the menu and send header
     await query.delete_message()
     
-    header_text = f"📋 *Pending Messages \\({len(pending_messages)}\\)*\n\n💌 User messages awaiting response"
+    header_text = rf"📋 *Pending Messages \\({len(pending_messages)}\\)*\n\n💌 User messages awaiting response"
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=header_text,
@@ -8359,7 +8358,7 @@ async def admin_db_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Database info section
         message_text += "💽 *Database Info*\n"
         message_text += f"📂 File Size: `{db_size_str}`\n"
-        message_text += f"👤 Active Users \\(30d\\): `{active_users:,}`\n"
+        message_text += rf"👤 Active Users \\(30d\\): `{active_users:,}`\n"
         message_text += f"🚫 Blocked Users: `{blocked_users:,}`\n\n"
         
         # Content breakdown
@@ -8379,7 +8378,7 @@ async def admin_db_stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
             message_text += "🏷️ *Top Categories*\n"
             for i, (category, count) in enumerate(top_categories[:3], 1):
                 escaped_category = escape_markdown_text(category)
-                message_text += f"{i}\\. {escaped_category}: `{count:,}`\n"
+                message_text += rf"{i}\\. {escaped_category}: `{count:,}`\n"
             message_text += "\n"
         
         # Engagement metrics
@@ -8515,7 +8514,7 @@ async def admin_backup_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 backup_type = backup.get('backup_type', 'unknown')
                 type_emoji = "🔄" if backup_type == "auto" else "👤" if backup_type == "manual" else "❓"
                 
-                message_text += f"{i}\\. {type_emoji} `{size_mb:.1f}MB` \\| {escaped_created}\n"
+                message_text += rf"{i}\\. {type_emoji} `{size_mb:.1f}MB` \\| {escaped_created}\n"
                 
                 # Show record count if available
                 if 'record_count' in backup:
@@ -8788,7 +8787,7 @@ async def search_user_recent_callback(update: Update, context: ContextTypes.DEFA
             return
         
         # Format results
-        result_text = f"📊 *Recent Users \\({len(recent_users)} found\\)*\n\n"
+        result_text = rf"📊 *Recent Users \\({len(recent_users)} found\\)*\n\n"
         
         for i, user in enumerate(recent_users, 1):
             user_id_val, username, first_name, last_name, join_date, questions_asked, comments_posted, blocked = user
@@ -8808,7 +8807,7 @@ async def search_user_recent_callback(update: Update, context: ContextTypes.DEFA
             except:
                 formatted_date = "Unknown"
             
-            result_text += f"{i}\\. {status} {escape_markdown_text(display_name)}\n"
+            result_text += rf"{i}\\. {status} {escape_markdown_text(display_name)}\n"
             result_text += f"   ID: `{user_id_val}` \\| Activity: {total_activity}\n"
             result_text += f"   Joined: {escape_markdown_text(formatted_date)}\n\n"
         
@@ -8868,7 +8867,7 @@ async def search_user_active_callback(update: Update, context: ContextTypes.DEFA
             return
         
         # Format results
-        result_text = f"⚡ *Most Active Users \\({len(active_users)} found\\)*\n\n"
+        result_text = rf"⚡ *Most Active Users \\({len(active_users)} found\\)*\n\n"
         
         for i, user in enumerate(active_users, 1):
             user_id_val, username, first_name, last_name, join_date, questions_asked, comments_posted, blocked = user
@@ -8879,7 +8878,7 @@ async def search_user_active_callback(update: Update, context: ContextTypes.DEFA
             status = "🚫" if blocked else "✅"
             total_activity = questions_asked + comments_posted
             
-            result_text += f"{i}\\. {status} {escape_markdown_text(display_name)}\n"
+            result_text += rf"{i}\\. {status} {escape_markdown_text(display_name)}\n"
             result_text += f"   ID: `{user_id_val}` \\| Activity: {total_activity}\n"
             result_text += f"   Posts: {questions_asked} \\| Comments: {comments_posted}\n\n"
         
@@ -8966,7 +8965,7 @@ async def handle_admin_user_search(update: Update, context: ContextTypes.DEFAULT
             await update.message.reply_text(
                 f"🔍 *Search Results*\n\n"
                 f"No users found for: `{escape_markdown_text(search_term)}`\n\n"
-                f"Try a different search term or method\\.",
+                rf"Try a different search term or method\\.",
                 reply_markup=InlineKeyboardMarkup([[
                     InlineKeyboardButton("🔙 Back to Search", callback_data="admin_search_user")
                 ]]),
@@ -8975,7 +8974,7 @@ async def handle_admin_user_search(update: Update, context: ContextTypes.DEFAULT
             return
         
         # Format results
-        result_text = f"🔍 *Search Results \\({len(results)} found\\)*\n\n"
+        result_text = rf"🔍 *Search Results \\({len(results)} found\\)*\n\n"
         result_text += f"Search term: `{escape_markdown_text(search_term)}`\n\n"
         
         for i, user in enumerate(results, 1):
@@ -8995,7 +8994,7 @@ async def handle_admin_user_search(update: Update, context: ContextTypes.DEFAULT
             except:
                 formatted_date = "Unknown"
             
-            result_text += f"{i}\\. {status} {escape_markdown_text(display_name)}\n"
+            result_text += rf"{i}\\. {status} {escape_markdown_text(display_name)}\n"
             result_text += f"   ID: `{user_id_val}` \\| Activity: {total_activity}\n"
             result_text += f"   Posts: {total_posts} \\| Comments: {total_comments}\n"
             result_text += f"   Joined: {escape_markdown_text(formatted_date)}\n\n"
@@ -9173,7 +9172,7 @@ async def admin_list_backups_callback(update: Update, context: ContextTypes.DEFA
             return
         
         # Build backup list message
-        list_text = f"🗃 *All Backups \\({len(backups)}\\)*\n\n"
+        list_text = rf"🗃 *All Backups \\({len(backups)}\\)*\n\n"
         
         total_size = 0
         for i, backup in enumerate(backups, 1):
@@ -9194,7 +9193,7 @@ async def admin_list_backups_callback(update: Update, context: ContextTypes.DEFA
             backup_type = backup.get('backup_type', 'unknown')
             type_emoji = "🔄" if backup_type == "auto" else "👤" if backup_type == "manual" else "❓"
             
-            list_text += f"{i}\\. {type_emoji} **{size_mb:.1f}MB** \\| {escaped_created}\n"
+            list_text += rf"{i}\\. {type_emoji} **{size_mb:.1f}MB** \\| {escaped_created}\n"
             
             # Show record count if available
             if 'record_count' in backup:
@@ -9506,7 +9505,7 @@ async def admin_db_maintenance_callback(update: Update, context: ContextTypes.DE
         maintenance_text += "📋 **Operations Performed:**\n"
         
         for i, result in enumerate(maintenance_results, 1):
-            maintenance_text += f"{i}\\. {result}\n"
+            maintenance_text += rf"{i}\\. {result}\n"
         
         maintenance_text += "\n✨ Regular maintenance helps keep your database optimized and running smoothly\\."
         
@@ -10270,7 +10269,7 @@ async def admin_user_posts_callback(update: Update, context: ContextTypes.DEFAUL
         
         if not posts_data['posts']:
             no_posts_text = f"📝 *No Posts Found*\n\n"
-            no_posts_text += f"User {user_id_to_view} has no posts to display\\."
+            no_posts_text += rf"User {user_id_to_view} has no posts to display\\."
             
             keyboard = [[
                 InlineKeyboardButton("🔙 Back to User Details", callback_data=f"admin_user_detail_{user_id_to_view}")
@@ -10291,9 +10290,9 @@ async def admin_user_posts_callback(update: Update, context: ContextTypes.DEFAUL
             status_emoji = "✅" if post['approved'] == 1 else "⏳" if post['approved'] is None else "❌"
             status_text = "Approved" if post['approved'] == 1 else "Pending" if post['approved'] is None else "Rejected"
             
-            posts_text += f"{i}\\. *Post \\#{post['post_id']}* {status_emoji}\n"
+            posts_text += rf"{i}\\. *Post \\#{post['post_id']}* {status_emoji}\n"
             posts_text += f"   Category: {escape_markdown_text(post['category'])}\n"
-            posts_text += f"   Content: {escape_markdown_text(post['content'][:100])}{'\\.\\.\\.' if len(post['content']) > 100 else ''}\n"
+            posts_text += rf"   Content: {escape_markdown_text(post['content'][:100])}{'\\.\\.\\.' if len(post['content']) > 100 else ''}\n"
             posts_text += f"   Comments: {post['comments_count']} \\| Status: {status_text}\n\n"
         
         # Create navigation buttons
@@ -10355,7 +10354,7 @@ async def admin_user_comments_callback(update: Update, context: ContextTypes.DEF
         
         if not comments_data['comments']:
             no_comments_text = f"💬 *No Comments Found*\n\n"
-            no_comments_text += f"User {user_id_to_view} has no comments to display\\."
+            no_comments_text += rf"User {user_id_to_view} has no comments to display\\."
             
             keyboard = [[
                 InlineKeyboardButton("🔙 Back to User Details", callback_data=f"admin_user_detail_{user_id_to_view}")
@@ -10373,9 +10372,9 @@ async def admin_user_comments_callback(update: Update, context: ContextTypes.DEF
         comments_text = f"💬 *User Comments \\- Page {comments_data['current_page']} of {comments_data['total_pages']}*\n\n"
         
         for i, comment in enumerate(comments_data['comments'], 1):
-            comments_text += f"{i}\\. *Comment \\#{comment['comment_id']}*\n"
+            comments_text += rf"{i}\\. *Comment \\#{comment['comment_id']}*\n"
             comments_text += f"   Post: \\#{comment['post_id']}\n"
-            comments_text += f"   Content: {escape_markdown_text(comment['content'][:80])}{'\\.\\.\\.' if len(comment['content']) > 80 else ''}\n"
+            comments_text += rf"   Content: {escape_markdown_text(comment['content'][:80])}{'\\.\\.\\.' if len(comment['content']) > 80 else ''}\n"
             comments_text += f"   Likes: {comment['likes']} \\| Dislikes: {comment['dislikes']}\n\n"
         
         # Create navigation buttons
@@ -10436,7 +10435,7 @@ async def admin_user_activity_analytics_callback(update: Update, context: Contex
         
         if not analytics:
             no_analytics_text = f"🎯 *No Activity Analytics*\n\n"
-            no_analytics_text += f"User {user_id_to_view} has no activity to analyze\\."
+            no_analytics_text += rf"User {user_id_to_view} has no activity to analyze\\."
             
             keyboard = [[
                 InlineKeyboardButton("🔙 Back to User Details", callback_data=f"admin_user_detail_{user_id_to_view}")
@@ -10463,14 +10462,14 @@ async def admin_user_activity_analytics_callback(update: Update, context: Contex
         if analytics['most_liked_posts']:
             analytics_text += f"**🏆 Top Liked Posts:**\n"
             for i, post in enumerate(analytics['most_liked_posts'][:3], 1):
-                analytics_text += f"{i}\\. Post #{post['post_id']} - {post['total_likes']} likes\n"
+                analytics_text += rf"{i}\\. Post #{post['post_id']} - {post['total_likes']} likes\n"
             analytics_text += "\n"
         
         # Most liked comments
         if analytics['most_liked_comments']:
             analytics_text += f"**💬 Top Liked Comments:**\n"
             for i, comment in enumerate(analytics['most_liked_comments'][:3], 1):
-                analytics_text += f"{i}\\. Comment #{comment['id']} - {comment['likes']} likes\n"
+                analytics_text += rf"{i}\\. Comment #{comment['id']} - {comment['likes']} likes\n"
             analytics_text += "\n"
         
         # Category statistics
@@ -10482,7 +10481,7 @@ async def admin_user_activity_analytics_callback(update: Update, context: Contex
         
         # Recent activity
         if analytics.get('recent_activity'):
-            analytics_text += f"**🕒 Recent Activity \\(7 days\\):**\n"
+            analytics_text += rf"**🕒 Recent Activity \\(7 days\\):**\n"
             analytics_text += f"• Posts: {analytics['recent_activity']['posts']}\n"
             analytics_text += f"• Comments: {analytics['recent_activity']['comments']}\n"
         
@@ -10529,7 +10528,7 @@ async def admin_user_post_analytics_callback(update: Update, context: ContextTyp
         
         if not analytics or analytics['total_posts'] == 0:
             no_posts_text = f"📈 *No Post Analytics*\n\n"
-            no_posts_text += f"User {user_id_to_view} has no posts to analyze\\."
+            no_posts_text += rf"User {user_id_to_view} has no posts to analyze\\."
             
             keyboard = [[
                 InlineKeyboardButton("🔙 Back to User Details", callback_data=f"admin_user_detail_{user_id_to_view}")
@@ -10553,7 +10552,7 @@ async def admin_user_post_analytics_callback(update: Update, context: ContextTyp
         if analytics['most_liked_posts']:
             analytics_text += f"\n**🏆 Most Liked Posts:**\n"
             for i, post in enumerate(analytics['most_liked_posts'][:5], 1):
-                analytics_text += f"{i}\\. Post #{post['id']} \\- {post['total_likes']} likes\n"
+                analytics_text += rf"{i}\\. Post #{post['id']} \\- {post['total_likes']} likes\n"
                 analytics_text += f"   Category: {escape_markdown_text(post['category'])}\n"
                 analytics_text += f"   Comments: {post.get('comment_count', 0)}\n"
             analytics_text += "\n"
@@ -10563,7 +10562,7 @@ async def admin_user_post_analytics_callback(update: Update, context: ContextTyp
             analytics_text += f"**📂 Posts by Category:**\n"
             for category, count in analytics['category_stats'].items():
                 percentage = (count / analytics['total_posts'] * 100) if analytics['total_posts'] > 0 else 0
-                analytics_text += f"• {escape_markdown_text(category)}: {count} \\({percentage:.1f}%\\)\n"
+                analytics_text += rf"• {escape_markdown_text(category)}: {count} \\({percentage:.1f}%\\)\n"
         
         keyboard = [[
             InlineKeyboardButton("🔙 Back to User Details", callback_data=f"admin_user_detail_{user_id_to_view}")
@@ -10608,7 +10607,7 @@ async def admin_user_comment_analytics_callback(update: Update, context: Context
         
         if not analytics or analytics['total_comments'] == 0:
             no_comments_text = f"📊 *No Comment Analytics*\n\n"
-            no_comments_text += f"User {user_id_to_view} has no comments to analyze\\."
+            no_comments_text += rf"User {user_id_to_view} has no comments to analyze\\."
             
             keyboard = [[
                 InlineKeyboardButton("🔙 Back to User Details", callback_data=f"admin_user_detail_{user_id_to_view}")
@@ -10637,14 +10636,14 @@ async def admin_user_comment_analytics_callback(update: Update, context: Context
         if analytics['most_liked_comments']:
             analytics_text += f"**🏆 Most Liked Comments:**\n"
             for i, comment in enumerate(analytics['most_liked_comments'][:5], 1):
-                analytics_text += f"{i}\\. Comment #{comment['id']} \\- {comment['likes']} likes\n"
+                analytics_text += rf"{i}\\. Comment #{comment['id']} \\- {comment['likes']} likes\n"
                 analytics_text += f"   Post: #{comment['post_id']}\n"
                 comment_preview = comment['content'][:50] + "..." if len(comment['content']) > 50 else comment['content']
                 analytics_text += f"   Preview: {escape_markdown_text(comment_preview)}\n\n"
         
         # Recent comment activity (if available)
         if analytics.get('recent_activity', {}).get('comments', 0) > 0:
-            analytics_text += f"**🕒 Recent Activity \\(7 days\\):**\n"
+            analytics_text += rf"**🕒 Recent Activity \\(7 days\\):**\n"
             analytics_text += f"• Comments Posted: {analytics['recent_activity']['comments']}\n"
         
         keyboard = [[
@@ -10729,10 +10728,14 @@ def main():
     
     # Run automatic notification table schema fixes
     logger.info("Running notification table schema migrations...")
-    from auto_migrate_notifications import run_startup_migrations
-    if not run_startup_migrations():
-        logger.warning("Notification table migration failed - continuing anyway")
-        # Don't exit, notification issues shouldn't prevent bot startup
+    try:
+        from auto_migrate_notifications import run_startup_migrations
+        if not run_startup_migrations():
+            logger.warning("Notification table migration failed - continuing anyway")
+    except ImportError:
+        logger.warning("auto_migrate_notifications module not found - skipping notification migrations")
+    except Exception as e:
+        logger.warning(f"Notification table migration failed (continuing anyway): {e}")
     
     # Initialize backup system
     logger.info("Starting backup system...")
